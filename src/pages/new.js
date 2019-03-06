@@ -164,9 +164,10 @@ class NewPollPage extends Component {
     }));
   };
 
-  handleCreate = () => {
+  handleCreate = (auth) => {
+    console.log('In handleCreate, auth:', auth);
     const pollId = shortId.generate();
-    const { signIn, uid } = this.props;
+    const { signIn, uid } = auth;
     // eslint-disable-next-line
     // debugger;
 
@@ -216,42 +217,48 @@ class NewPollPage extends Component {
     const { options, loading, title } = this.state;
     const optionsWithText = options.filter(({ text }) => !!text.trim());
     const disableCreate = !title || optionsWithText.length < 2 || loading;
-
+    console.log('Before TextWrapper', this.props);
     return (
-    <TextWrapper>
-      <div>
-        <Heading2>Create a new Poll</Heading2>
-        <TitleContainer>
-          <TitleLabel htmlFor="newPollTitle">Title</TitleLabel>
-          <TitleInput
-            id="newPollTitle"
-            value={title}
-            onChange={this.handleTitleChange}
-          />
-        </TitleContainer>
-        <NewPoll
-          options={options}
-          onToggleEdit={this.handleToggleEdit}
-          onTextChange={this.handleTextChange}
-          onKeyDown={this.handleKeydown}
-          onSortEnd={this.handleSortEnd}
-          onDelete={this.handleDelete}
-        />
-        <ActionContainer>
-          <Button
-            disabled={disableCreate}
-            onClick={!disableCreate && this.handleCreate}>
-            {loading ? 'Creating...' : 'Create'}
-          </Button>
-
-          <CreateButton
-            disabled={loading}
-            onClick={!loading && this.handleAddItem}>
-            Add
-          </CreateButton>
-        </ActionContainer>
-      </div>
-    </TextWrapper>
+      <TextWrapper>
+        {
+          (auth) => {
+            return (
+              <div>
+                <Heading2>Create a new Poll</Heading2>
+                <TitleContainer>
+                  <TitleLabel htmlFor="newPollTitle">Title</TitleLabel>
+                  <TitleInput
+                    id="newPollTitle"
+                    value={title}
+                    onChange={this.handleTitleChange}
+                  />
+                </TitleContainer>
+                <NewPoll
+                  options={options}
+                  onToggleEdit={this.handleToggleEdit}
+                  onTextChange={this.handleTextChange}
+                  onKeyDown={this.handleKeydown}
+                  onSortEnd={this.handleSortEnd}
+                  onDelete={this.handleDelete}
+                />
+                <ActionContainer>
+                  <Button
+                    disabled={disableCreate}
+                    onClick={!disableCreate && (() => this.handleCreate(auth))}>
+                    {loading ? 'Creating...' : 'Create'}
+                  </Button>
+            
+                  <CreateButton
+                    disabled={loading}
+                    onClick={!loading && this.handleAddItem}>
+                    Add
+                  </CreateButton>
+                </ActionContainer>
+              </div>
+            );
+          }
+        }
+      </TextWrapper>
     );
   }
 }

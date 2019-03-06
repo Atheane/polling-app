@@ -25,6 +25,7 @@ const query = graphql`
 `;
 
 const TemplateWrapper = ({ children, data, ...props }) => (
+  
   <Auth>
     {auth => {
       return (
@@ -45,8 +46,7 @@ const TemplateWrapper = ({ children, data, ...props }) => (
                 {...auth}
               />
               <Container>
-                { /* this is how we pass props to children prop */}
-                { React.cloneElement(children, {...props, ...auth})}
+                { children({...props, ...auth}) }
               </Container>
             </div>
           )}
