@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TemplateWrapper from '../components/TemplateWrapper';
+import TemplateWrapper from '../components/TextWrapper';
 import SEO from '../components/seo';
 
 const NotFoundPage = () => (
